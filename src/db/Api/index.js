@@ -16,10 +16,16 @@ module.exports = function ApiDb (db) {
       return this.belongsTo(db.App, "AppId", "Id");
     },
     Routes: function() {
-      return this.hasMany(db.Route, "ApiId", "Id");
+      return this.hasMany(db.Route, "ApiId", "Id")
+        .query(function(qb) {
+          qb.whereNull('Deleted');
+        });
     },
     Operations: function() {
-      return this.hasMany(db.Operation, "ApiId", "Id");
+      return this.hasMany(db.Operation, "ApiId", "Id")
+        .query(function(qb) {
+          qb.whereNull('Deleted');
+        });
     },
   });
 

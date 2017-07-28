@@ -32,7 +32,7 @@ module.exports = function OperationDb (db) {
 
   function fetchOperationsByApiId (apiId) {
     return new Promise((resolve, reject) => {
-      Operation.where({"ApiId": apiId})
+      Operation.where({"ApiId": apiId, "Deleted": null})
         .fetchAll()
         .then(resolve)
         .catch(reject);

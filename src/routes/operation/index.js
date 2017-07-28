@@ -12,6 +12,7 @@ module.exports = function (dataStudio) {
   const api = dataStudio.expressApp;
   const db = dataStudio.db;
   const events = dataStudio.events;
+  const authz = dataStudio.authz;
 
   api.get("/operation/:operationId", requireAuthorization, function (req, res) {
     if (null === req.operationModel) {
@@ -31,7 +32,21 @@ module.exports = function (dataStudio) {
     if (null === req.operationModel) {
       return res.sendStatus(404);
     }
-    res.sendStatus(204).send("");
+    let prefix = "/api/" + req.operationModel.get("ApiId");
+    authz.verifyOwnership(prefix + req.path, req.authUser.get("Id"))
+      .then(function () {
+        req.operationModel.save({"Deleted": Math.floor(Date.now()/1000)}, {patch: true})
+          .then(function () {
+            res.sendStatus(204);
+          })
+          .catch(function (err) {
+            console.log(err);
+            res.sendStatus(500);
+          });
+      })
+      .catch(function (err) {
+        res.status(404).send();
+      });
   });
 
   api.get("/operations", requireAuthorization, function (req, res) {

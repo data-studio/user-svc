@@ -15,6 +15,12 @@ module.exports = function Schema (db) {
     App: function() {
       return this.belongsTo(db.App, "AppId", "Id");
     },
+    Properties: function() {
+      return this.hasMany(db.Property, "Id", "SchemaId")
+        .query(function(qb) {
+          qb.whereNull('Deleted');
+        });
+    },
   });
 
   db.Schema = Schema;
@@ -22,7 +28,7 @@ module.exports = function Schema (db) {
   function fetchSchemaById (id) {
     return new Promise((resolve, reject) => {
       Schema.where({"Id": id})
-        .fetch({withRelated: ["App", "Operations"]})
+        .fetch({withRelated: ["App", "Properties"]})
         .then(resolve)
         .catch(reject);
     });

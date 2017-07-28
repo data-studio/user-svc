@@ -32,13 +32,22 @@ module.exports = function AppDb (db) {
       return this.belongsTo(db.User, "UserId", "Id");
     },
     Schemas: function() {
-      return this.hasMany(db.AppSchema, "AppId");
+      return this.hasMany(db.AppSchema, "AppId")
+        .query(function(qb) {
+          qb.whereNull('Deleted');
+        });
     },
     Clients: function() {
-      return this.hasMany(db.Client, "AppId");
+      return this.hasMany(db.Client, "AppId")
+        .query(function(qb) {
+          qb.whereNull('Deleted');
+        });
     },
     Apis: function() {
-      return this.hasMany(db.Api, "AppId");
+      return this.hasMany(db.Api, "AppId")
+        .query(function(qb) {
+          qb.whereNull('Deleted');
+        });
     },
   });
 

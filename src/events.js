@@ -45,4 +45,9 @@ module.exports = function (dataStudio) {
     dataStudio.authz.registerOwnership("/"+uri.split(/\//g).slice(3,2).join("/"), createdByUserId);
   });
 
+  events.addListener("signup:success", function (d) {
+    console.log("signup:success");
+    console.log(d);
+  });
+
 }

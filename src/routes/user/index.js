@@ -107,7 +107,8 @@ module.exports = function (dataStudio) {
           createUserPassword(),
           createUser(),
         ])
-        .then(function () {
+        .then(function (d) {
+          events.emit("signup:success", d);
           res.status(202).send("");
         })
         .catch(handleErr);

@@ -46,8 +46,28 @@ module.exports = function (dataStudio) {
   });
 
   events.addListener("signup:success", function (d) {
-    console.log("signup:success");
-    console.log(d);
+
+    async(function () {
+
+      let user = d[1];
+      let userLogin = user.get("Login");
+
+      console.log("signup:success");
+      console.log(`New user account created <${userLogin}>`);
+
+    });
+
   });
+
+  function async (f) {
+    process.nextTick(function () {
+      try {
+        f && f();
+      }
+      catch (err) {
+        console.log(err);
+      }
+    });
+  }
 
 }

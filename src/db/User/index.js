@@ -13,7 +13,10 @@ module.exports = function UserDb (db) {
       });
     },
     Apps: function() {
-      return this.hasMany(db.App, "Id", "UserId");
+      return this.hasMany(db.App, "Id", "UserId")
+        .query(function(qb) {
+          qb.whereNull('Deleted');
+        });
     },
   });
 

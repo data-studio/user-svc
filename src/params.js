@@ -93,6 +93,21 @@ module.exports = function (dataStudio) {
 
   });
 
+  api.param("schemaId", function (req, res, next, id) {
+
+    req.schemaModel = null;
+
+    db.fetchSchemaById(id, { withRelated: ["Schema"] })
+      .then(function (schema) {
+        req.schemaModel = schema;
+        next();
+      })
+      .catch(function (err) {
+        next();
+      });
+
+  });
+
   api.param("operationId", function (req, res, next, id) {
 
     req.operationModel = null;

@@ -100,6 +100,7 @@ module.exports = function (dataStudio) {
     {id: "schemas", fetch: "fetchAppSchemasByAppId"},
     {id: "apis", fetch: "fetchAppApisByAppId"},
     {id: "clients", fetch: "fetchAppClientsByAppId"},
+    {id: "envs", fetch: "fetchEnvsByAppId"},
   ].forEach(x => {
 
     let tId = x.id;
@@ -125,10 +126,12 @@ module.exports = function (dataStudio) {
       "clients": "client",
       "apis": "api",
       "schemas": "schema",
+      "envs": "env",
     }
     let Client = db.Client;
     let Api = db.Api;
     let AppSchema = db.AppSchema;
+    let Env = db.Env;
     let subTypeName = req.subTypeName;
     let subTypeId = req.subTypeId;
     let appId = req.appModel.get("Id");
@@ -183,6 +186,22 @@ module.exports = function (dataStudio) {
             res.status(400).send({ ErrorMsg: err.message });
           });
         break;
+      case "env":
+        db.fetchEnvById(subTypeId)
+          .then(function (env) {
+            authz.verifyOwnership(req.path, req.authUser.get("Id"))
+              .then(function () {
+                res.status(200).send(env);
+              })
+              .catch(function (err) {
+                res.status(404).send();
+              });
+          })
+          .catch(function (err) {
+            console.log(err);
+            res.status(400).send({ ErrorMsg: err.message });
+          });
+        break;
     }
   });
 
@@ -191,9 +210,11 @@ module.exports = function (dataStudio) {
       "clients": "client",
       "apis": "api",
       "schemas": "schema",
+      "envs": "env",
     }
     let Client = db.Client;
     let Api = db.Api;
+    let Env = db.Env;
     let AppSchema = db.AppSchema;
     let subTypeName = req.subTypeName;
     let appId = req.appModel.get("Id");
@@ -222,6 +243,14 @@ module.exports = function (dataStudio) {
           AppId: appId,
           Name: req.body.Name || "NewSchema",
           Ref: req.body.Ref || "#" + req.body.Name,
+          Created: Math.floor(Date.now()/1000),
+        });
+        break;
+      case "envs":
+        newAppThing = new Env({
+          Id: newAppThingId,
+          AppId: appId,
+          Name: req.body.Name || "New Env",
           Created: Math.floor(Date.now()/1000),
         });
         break;

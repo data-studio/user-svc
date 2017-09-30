@@ -16,6 +16,10 @@ Vagrant.configure("2") do |config|
   end
 
   config.vm.provision "shell", inline: <<-SHELL
+    echo "#!/bin/sh" >> start.sh
+    echo "cd /vagrant" >> start.sh
+    echo "nohup npm start &" >> start.sh
+    chmod +x start.sh
     echo "=== INSTALLING NODE/NPM ==="
     wget https://nodejs.org/dist/v8.2.1/node-v8.2.1-linux-x64.tar.xz -o wget.txt
     tar -xf node-v8.2.1-linux-x64.tar.xz

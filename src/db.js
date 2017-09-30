@@ -3,11 +3,13 @@
 module.exports = function () {
 
   const DBS = [
+    "Org",
     "Operation",
     "Api",
     "App",
     "Auth",
     "Client",
+    "Env",
     "Hash",
     "Property",
     "ResourceOwner",

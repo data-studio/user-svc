@@ -49,6 +49,12 @@ module.exports = function AppDb (db) {
           qb.whereNull('Deleted');
         });
     },
+    Envs: function() {
+      return this.hasMany(db.Env, "EnvId")
+        .query(function(qb) {
+          qb.whereNull('Deleted');
+        });
+    },
   });
 
   db.App = App;

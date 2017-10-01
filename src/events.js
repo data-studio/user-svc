@@ -16,10 +16,13 @@
  */
 "use strict";
 
+const v4uuid = require("uuid/v4");
+
 module.exports = function (dataStudio) {
 
   const db = dataStudio.db;
   const AuthAttempt = db.AuthAttempt;
+  const AccessKey = db.AccessKey;
 
   const EventEmitter = require("events");
 
@@ -53,6 +56,24 @@ module.exports = function (dataStudio) {
         Error: d.Error,
         TokenId: null,
         Created: Math.floor(Date.now()/1000),
+      }).save();
+    });
+  });
+
+  events.addListener("env:created", function (envId) {
+    async(function () {
+      let timeNow = Math.floor(Date.now()/1000);
+      AccessKey.forge({
+        Id: v4uuid(),
+        SecureId: envId,
+        KeyType: "PUBLIC",
+        Created: timeNow,
+      }).save();
+      AccessKey.forge({
+        Id: v4uuid(),
+        SecureId: envId,
+        KeyType: "PRIVATE",
+        Created: timeNow,
       }).save();
     });
   });

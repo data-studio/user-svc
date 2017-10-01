@@ -273,10 +273,30 @@ module.exports = function (dataStudio) {
     }
     newAppThing.save()
       .then(function (appThing) {
+
         let uri = `/app/${appId}/${t[subTypeName]}/${appThing.get("Id")}`;
-        events.emit("resource:created", uri, req.authUser.get("Id"));
-        events.emit("resource:created", `/${t[subTypeName]}/${appThing.get("Id")}`, req.authUser.get("Id"));
+
+        try {
+          events.emit(
+            "resource:created",
+            uri,
+            req.authUser.get("Id")
+          );
+          events.emit(
+            "resource:created",
+            `/${t[subTypeName]}/${appThing.get("Id")}`,
+            req.authUser.get("Id")
+          );
+        } catch (e) { console.error(e); }
+
+        try {
+          if ("envs" === subTypeName) {
+            events.emit("env:created", appThing.get("Id"));
+          }
+        } catch (e) { console.error(e); }
+
         res.localRedirect(uri);
+
       })
       .catch(function (err) {
         res.status(400).send({ ErrorMsg: err.message });

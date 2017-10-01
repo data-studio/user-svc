@@ -21,6 +21,7 @@ module.exports = function () {
   const DBS = [
     "Org",
     "Operation",
+    "AccessKey",
     "Api",
     "App",
     "Auth",

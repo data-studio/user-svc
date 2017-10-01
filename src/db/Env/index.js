@@ -22,6 +22,7 @@ module.exports = function Env (db) {
   let Env = bookshelf.Model.extend({
     tableName: 'envs',
     constructor: function() {
+      let env = this;
       bookshelf.Model.apply(this, arguments);
       this.on('saving', function(model, attrs, options) {
         options.query.where('Id', '=', model.get("Id"));
@@ -29,6 +30,15 @@ module.exports = function Env (db) {
     },
     App: function() {
       return this.belongsTo(db.App, "AppId", "Id");
+    },
+    App: function() {
+      return this.belongsTo(db.App, "AppId", "Id");
+    },
+    Keys: function() {
+      return this.hasMany(db.AccessKey, "SecureId", "Id")
+        .query(function(qb) {
+          qb.whereNull('Deleted');
+        });
     },
   });
 
@@ -48,7 +58,7 @@ module.exports = function Env (db) {
   function fetchEnvById (id) {
     return new Promise((resolve, reject) => {
       Env.where({"Id": id, "Deleted": null})
-        .fetch()
+        .fetch({ withRelated: ["Keys"] })
         .then(resolve)
         .catch(reject);
     });

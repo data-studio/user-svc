@@ -4,6 +4,9 @@ INDEV: App &amp; User Auth Service for DataStudio
 This works with:
 https://github.com/eviratec/ngui
 
+## *Important Note:* This project is being replaced by: github.com/data-studio/wp-theme
+This `user-svc` repository is no longer being maintained and is very soon to be replaced by: https://github.com/data-studio/wp-theme
+
 ## If you 💖 it: Please consider contributing or sharing
 
 Guidelines coming soon...
